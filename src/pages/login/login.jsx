@@ -3,10 +3,11 @@ import {connect} from "react-redux"
 import {Redirect} from "react-router-dom"
 
 import "./login.less";
-import logo from "./images/0.jpg";
-import { Form, Button, Input, message } from "antd";
+import logo from "../../assets/images/0.jpg";
+import { Form, Button, Input } from "antd";
 import { UserOutlined, LockOutlined} from '@ant-design/icons';
 import { request_login } from "../../redux/actions";
+import storageUser from "../../utils/storageUser";
 
 
 class Login extends Component{
@@ -14,25 +15,19 @@ class Login extends Component{
     static state={
         username:'',
         password:''
-    }
-   componentWillUpdate() {
-        if(this.props.user.msg){
-            this.props.user.msg=null
-        }
-   }
+    };
+
 
     onFinish=(values)=>{
         const { username, password }=values;
-        this.setState({ username, password })
-        this.props.request_login(this.state);
-        // console.log(this.formRef.current.validateFields)
-    }
+        this.setState({ username, password });
+        this.props.request_login({ username, password });
+    };
     render() {
-        const msg=this.props.user.msg;
+        const {_id}=storageUser.getUser();
         return(
             <div className="login">
-                {this.props.user._id ? <Redirect to="/"/> : null}
-                {msg?message.error(msg):null}
+                {_id ? <Redirect to="/"/> : null}
                 <div className="login_head">
                     <img src={logo} alt="logo"/>
                     <div className="text">后台管理系统——安浩</div>

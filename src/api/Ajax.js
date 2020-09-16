@@ -32,7 +32,7 @@ export default function ajax(url,type="get",data={}) {
              promise=Axios.post(url,data)
         }
         promise.then(response=>{
-            resolve(response)
+            resolve(response.data)
         }).catch(err=>{
             message.info(err.message)
         })

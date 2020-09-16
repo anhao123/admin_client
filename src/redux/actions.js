@@ -2,6 +2,8 @@
 
 import {LOGIN_ERROR, LOGIN_SUCCESS} from "./types";
 import {login} from "../api/api";
+import {message} from "antd";
+import storageUser from "../utils/storageUser"
 
 
 //登陆成功&失败
@@ -17,12 +19,15 @@ export const request_login=(user)=>{
      const {username,password}=user;
      return async dispatch=>{
              const  response=await login({username,password});
-             if(response.data.status===0){
-                 console.log(response.data)
-                 dispatch(login_success(response.data.data))
+             if(response.status===0){
+                 console.log(response)
+                 // localStorage.setItem("user_key",JSON.stringify(response.data))
+                 storageUser.saveUser(response.data)
+                 dispatch(login_success(response.data))
              }else {
-                  console.log(response)
-                 dispatch(login_error(response.data.msg))
+                 dispatch(login_error(response.msg))
+                 console.log(response)
+                 message.error(response.msg)
              }
      }
 }
