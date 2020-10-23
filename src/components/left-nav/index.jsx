@@ -1,13 +1,13 @@
 import React, {Component} from "react";
 import { Menu } from 'antd';
-import {Link} from "react-router-dom"
+import { Link, withRouter } from "react-router-dom"
 
 import './index.less';
 import logo from "../../assets/images/0.jpg";
 import MenuList from "../../Menuconfig/menuList"
 
 const { SubMenu } = Menu;
-export default class LeftNav extends Component{
+class LeftNav extends Component{
 
     getMenus=(menulist)=>{
         return menulist.map((item)=>{
@@ -20,6 +20,11 @@ export default class LeftNav extends Component{
                     </Menu.Item>
                 ))
             }else {
+                const path=this.props.location.pathname;
+                const Path=item.children.find(it=>it.key===path);
+                if(Path){
+                    this.defaultPath=item.key
+                }
                 return((
                     <SubMenu key={item.key} icon={item.icon} title={item.title}>
                         {
@@ -28,11 +33,22 @@ export default class LeftNav extends Component{
                     </SubMenu>
                 ))
             }
-
         })
     };
+    /*
+    * 在第一次render 之前执行
+    * */
+componentWillMount() {
+    // console.log("sdddd")
+    this.Menus=this.getMenus(MenuList)
+}
 
     render() {
+        /*不是路由组件  props中没有history location match
+        * 所以需要使用 withRouter（高阶函数）包装本组件
+        * */
+        const path=this.props.location.pathname;
+        // console.log("render()",path);
         return(
             <div className="left-nav">
                 <header>
@@ -41,7 +57,9 @@ export default class LeftNav extends Component{
                 </header>
                 <div style={{ width: "100%" }}>
                     <Menu
-                        defaultSelectedKeys={['1']}
+                         // defaultSelectedKeys={[path]} /*作用是默认选中  而且不是动态的*/
+                        selectedKeys={[path]}   /*作用是默认选中  是动态的*/
+                         defaultOpenKeys={[this.defaultPath]}
                         mode="inline"
                         theme="dark"
                     >
@@ -88,7 +106,7 @@ export default class LeftNav extends Component{
                             </Link>
                         </Menu.Item>*/}
                         {
-                            this.getMenus(MenuList)
+                            this.Menus
                         }
                     </Menu>
                 </div>
@@ -96,3 +114,4 @@ export default class LeftNav extends Component{
         )
     }
 }
+export default withRouter(LeftNav)

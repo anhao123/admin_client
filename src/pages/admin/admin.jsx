@@ -19,10 +19,6 @@ import User from "../user/user";
 const { Footer, Sider, Content } = Layout;
  class Admin extends Component{
 
-     signOut=()=>{
-         storageUser.removeUser();
-         this.props.history.replace("/login");
-     }
     render() {
         const { _id }=storageUser.getUser()
         if(!_id){
@@ -36,7 +32,7 @@ const { Footer, Sider, Content } = Layout;
                 <Layout>
                     <Header/>
                         {/*<button onClick={this.signOut}>退出登录</button>*/}
-                    <Content style={{backgroundColor:"white",overflow:"auto"}}>
+                    <Content style={{overflow:"auto",margin:"20px 15px 5px 15px",backgroundColor:"white"}}>
                         <Switch>
                             <Route path='/home' component={Home}/>
                             <Route path='/category' component={Category}/>
